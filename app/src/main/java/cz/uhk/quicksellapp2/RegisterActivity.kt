@@ -31,8 +31,9 @@ class RegisterActivity : AppCompatActivity() {
 
         val db = Firebase.firestore
 
+        //TODO kontrola ze jmeno jeste neexistuje
         btnRegister.setOnClickListener{
-            val intent = Intent(this,MapActivity::class.java)
+            val intent = Intent(this,MainDashboardActivity::class.java)
             val editor = sharedPreferences.edit()
             editor.putString("textUsername",textUsername.text.toString())
             editor.putBoolean("registeredBool",true) //todo pak zmenit

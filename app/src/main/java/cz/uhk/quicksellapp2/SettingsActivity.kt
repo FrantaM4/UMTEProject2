@@ -34,5 +34,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
+
+        //TODO Darkmode ???
     }
 }

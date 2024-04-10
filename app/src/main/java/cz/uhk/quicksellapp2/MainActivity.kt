@@ -1,19 +1,14 @@
 package cz.uhk.quicksellapp2
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             else{
-                val intent = Intent(this,MapActivity::class.java)
+                val intent = Intent(this,MainDashboardActivity::class.java)
                 startActivity(intent)
             }
 

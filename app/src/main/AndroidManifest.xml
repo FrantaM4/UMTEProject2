@@ -25,7 +25,7 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MapActivity"
+            android:name=".MainDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
