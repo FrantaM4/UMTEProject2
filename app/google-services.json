@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "705796545309",
+    "project_id": "schoolprojectkotlin",
+    "storage_bucket": "schoolprojectkotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705796545309:android:feec2d8b1a76400d0f9ff4",
+        "android_client_info": {
+          "package_name": "cz.uhk.quicksellapp2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByetztWI7yJ2QNlqVqX0FgZ4PxcpO3xss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
