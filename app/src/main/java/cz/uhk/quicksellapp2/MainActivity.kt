@@ -1,14 +1,18 @@
 package cz.uhk.quicksellapp2
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +33,14 @@ class MainActivity : AppCompatActivity() {
         val textUsername = findViewById<TextView>(R.id.UsernameView)
         val btnLaunch = findViewById<Button>(R.id.buttonLaunch)
         val btnSettings = findViewById<Button>(R.id.buttonSettings)
-
+        val db = Firebase.firestore
 
         /*//TODO IDK NEJAK TO SPRAVIT
         var syncCheck = false;
 
         //firebase db
         if (registeredBool){
-            val db = Firebase.firestore
+
             var usersFound = 0;
             db.collection("users")
                 .whereEqualTo("username", usernameString)
@@ -78,7 +82,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             else{
-                val intent = Intent(this,MainDashboardActivity::class.java)
+                val intent = Intent(this,LoadActivity::class.java)
+
+
                 startActivity(intent)
             }
 

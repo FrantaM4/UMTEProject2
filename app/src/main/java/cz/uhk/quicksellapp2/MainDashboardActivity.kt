@@ -1,7 +1,10 @@
 package cz.uhk.quicksellapp2
 
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlin.math.log
 
 class MainDashboardActivity : AppCompatActivity() {
 
@@ -41,12 +47,19 @@ class MainDashboardActivity : AppCompatActivity() {
         recyclerview.layoutManager = LinearLayoutManager(this)
         val data = ArrayList<ItemsViewModel>()
 
-        // This loop will create 20 Views containing
-        // the image with the count of view
-        for (i in 1..20) {
-            data.add(ItemsViewModel("Item " + i))
+
+        val db = Firebase.firestore
+        //data
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        //val usernameString= sharedPreferences.getString("textUsername", "chyba")
+        val dealNames = mutableListOf<String>()
+
+        for (i in 0..5) {
+            data.add(ItemsViewModel(sharedPreferences.getString("dealID${i}","asd").toString()))
         }
 
+
+        Log.d(TAG,dealNames.toString())
         // This will pass the ArrayList to our Adapter
         val adapter = CustomAdapter(data)
 
