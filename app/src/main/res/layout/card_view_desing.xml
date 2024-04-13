@@ -32,12 +32,14 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:onClick="OpenDealFun"
+            android:id="@+id/btnOpenDeal"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_weight="0.25"
             android:contentDescription="click"
             app:srcCompat="@android:drawable/ic_media_play" />
+
 
     </LinearLayout>
 

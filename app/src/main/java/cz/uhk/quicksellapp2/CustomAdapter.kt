@@ -1,23 +1,48 @@
 package cz.uhk.quicksellapp2
 
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivities
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     // create new views
+
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // inflates the card_view_design view
         // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_view_desing, parent, false)
 
+        val buttonOpenDeal = view.findViewById<ImageButton>(R.id.btnOpenDeal)
+        val textDealName = view.findViewById<TextView>(R.id.textView).text
+
+
+
+
+
         return ViewHolder(view)
+
+
+
+
     }
+
+
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,5 +66,13 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adap
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         //val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val textView: TextView = itemView.findViewById(R.id.textView)
+
+
+
+
+
     }
+
+
+
 }

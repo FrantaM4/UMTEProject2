@@ -35,21 +35,6 @@
         app:layout_constraintVertical_bias="0.98"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttonViewMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:contentDescription="buttonBackToMenu"
-        android:rotation="90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.836"
-        app:layout_constraintStart_toEndOf="@+id/buttonAddNew"
-        app:layout_constraintTop_toBottomOf="@+id/buttonBackToMenu"
-        app:layout_constraintVertical_bias="0.978"
-        app:srcCompat="@android:drawable/ic_menu_more" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -78,13 +63,86 @@
             android:hint="Filtrování nabídek"
             android:inputType="text" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ListNearestDeals"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            tools:itemCount="5"
-            tools:listitem="@layout/card_view_design"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/openAlldealsText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:text="Zobrazit vše"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/openAlldealsText3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:text="Zobrazit vše"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/openAlldealsText4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:text="Zobrazit vše"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/openAlldealsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:text="Zobrazit vše"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView7"
@@ -95,10 +153,69 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/LIstMyDeals"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/openDeal1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:clickable="false"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dealName1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:text="nab1"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/openMyDeal1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/common_full_open_on_phone"
+                    android:contentDescription="@string/common_open_on_phone"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/openDeal2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:clickable="false"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dealName2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:text="nab1"
+                    android:textAlignment="viewStart"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/openMyDeal2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/common_full_open_on_phone"
+                    android:contentDescription="@string/common_open_on_phone"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
