@@ -31,7 +31,7 @@ class RegisterActivity : AppCompatActivity() {
 
         val db = Firebase.firestore
 
-        //TODO kontrola ze jmeno jeste neexistuje
+        //TODO kontrola ze jmeno jeste neexistuje a nejaky podminky
         btnRegister.setOnClickListener{
             val intent = Intent(this,MainDashboardActivity::class.java)
             val editor = sharedPreferences.edit()
@@ -42,12 +42,8 @@ class RegisterActivity : AppCompatActivity() {
             // creater a new user
             val user = hashMapOf(
                 "username" to textUsername.text.toString(),
-                //TODO cas
-                //score
-                //...
-            )
+                )
 
-            // Add a new document with a generated ID
             db.collection("users")
                 .add(user)
                 .addOnSuccessListener { documentReference ->

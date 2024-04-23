@@ -44,12 +44,14 @@ class DealViewActivity : AppCompatActivity() {
         val db = Firebase.firestore
 
         db.collection("deals")
-            .whereEqualTo("ownerUser", usernameString)
             .whereEqualTo("dealName",dealName)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
+                    textPName.text = document.data.get("dealName").toString()
+                    textPDesc.text = document.data.get("dealDescription").toString()
+                    textPNum.text = document.data.get("phoneNumber").toString()
                 }
 
             }
@@ -59,7 +61,7 @@ class DealViewActivity : AppCompatActivity() {
 
 
         // TODO predelat
-        textPName.setText(dealName)
+        //textPName.setText(dealName)
 
 
     }

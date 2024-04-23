@@ -38,6 +38,7 @@ class LoadActivity : AppCompatActivity() {
                     Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
                     editor.putString("dealID${i}",document.data.get("dealName").toString())
                     i++
+                    editor.putInt("dealCount",i)
                 }
                 editor.apply()
                 startActivity(Intent(this,MainDashboardActivity::class.java))

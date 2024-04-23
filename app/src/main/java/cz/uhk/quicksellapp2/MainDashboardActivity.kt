@@ -1,25 +1,26 @@
 package cz.uhk.quicksellapp2
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
-import kotlin.math.log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.URL
 
 class MainDashboardActivity : AppCompatActivity() {
 
@@ -49,69 +50,79 @@ class MainDashboardActivity : AppCompatActivity() {
         }
 
 
-        /*
-        val recyclerview = findViewById<RecyclerView>(R.id.LIstMyDeals)
-        recyclerview.layoutManager = LinearLayoutManager(this)*/
-        val data = ArrayList<ItemsViewModel>()
 
 
-        val db = Firebase.firestore
-        //data
+
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        //val usernameString= sharedPreferences.getString("textUsername", "chyba")
-        //val dealNames = mutableListOf<String>()
 
 
-        //TODO Hnusookod predelat
-        val myDealTxtField1 = findViewById<TextView>(R.id.dealName1)
-        myDealTxtField1.setText(sharedPreferences.getString("dealID${0}","asd").toString())
-        val myDealTxtField2 = findViewById<TextView>(R.id.dealName2)
-        myDealTxtField2.setText(sharedPreferences.getString("dealID${1}","asd").toString())
+        val dealCount = sharedPreferences.getInt("dealCount",0)
 
-        findViewById<ImageButton>(R.id.openMyDeal1).setOnClickListener{
-                val intent = Intent(this, DealViewActivity::class.java)
+        val myDeals = mutableListOf<DealData>()
 
-                val editor = sharedPreferences.edit()
-                editor.putString("lastOpenedDealName", myDealTxtField1.text.toString())
-                editor.apply()
-                startActivity(intent)
 
-        }
-
-        findViewById<ImageButton>(R.id.openMyDeal2).setOnClickListener{
-            val intent = Intent(this, DealViewActivity::class.java)
-
-            val editor = sharedPreferences.edit()
-            editor.putString("lastOpenedDealName", myDealTxtField2.text.toString())
-            editor.apply()
-            startActivity(intent)
-
+        for (i in 0 until dealCount){
+            val dealName = sharedPreferences.getString("dealID${i}","idk")
+            myDeals.add(DealData(dealName.toString()))
         }
 
 
 
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView2)
 
-        // This will pass the ArrayList to our Adapter
-        //val adapter = CustomAdapter(data)
+        val recyclerView2 = findViewById<RecyclerView>(R.id.recyclerView3)
 
-        // Setting the Adapter with the recyclerview
-        //recyclerview.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = TaskAdapter(myDeals)
 
+        fetchData(sharedPreferences.getString("textUsername","").toString(),recyclerView2)
 
+        recyclerView2.layoutManager= LinearLayoutManager(this)
+        //recyclerView2.adapter = TaskAdapter(deals)
 
-        /*
-        val buttonOpenDeal = recyclerview.findViewById<ImageButton>(R.id.btnOpenDeal)
-        Log.d(TAG,buttonOpenDeal.id.toString())*/
-
-        /*
-        buttonOpenDeal.setOnClickListener{
-            val intent = Intent(this,AddActivity::class.java)
-            startActivity(intent)
-        }*/
-
-
-        //TODO zprovoznit list
 
 
     }
+
+
+    private fun fetchData(username: String, recyclerView: RecyclerView) {
+        // Use lifecycleScope for coroutine in production
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = getDataFromDB(username)
+            updateUI(result, recyclerView)
+        }
+    }
+
+    private suspend fun getDataFromDB(username: String): MutableList<DealData> {
+        return try {
+            val foreignDealsList = mutableListOf<DealData>()
+            val db = Firebase.firestore
+            db.collection("deals")
+                .whereNotEqualTo("ownerUser", username)
+                .get()
+                .addOnSuccessListener { result ->
+
+                    for (document in result) {
+                        Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
+                        foreignDealsList.add(DealData(document.data.get("dealName").toString()))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(ContentValues.TAG, "Error getting documents.", exception)
+
+                }
+            delay(200)
+            return foreignDealsList
+        } finally {
+
+        }
+    }
+
+    private suspend fun updateUI(deals : List<DealData>, recyclerView: RecyclerView) {
+        withContext(Dispatchers.Main) {
+            Log.d(TAG,deals.toString())
+            recyclerView.adapter = TaskAdapter(deals)
+        }
+    }
+
 }
