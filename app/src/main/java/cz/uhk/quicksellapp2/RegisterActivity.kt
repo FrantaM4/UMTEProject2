@@ -33,7 +33,7 @@ class RegisterActivity : AppCompatActivity() {
 
         //TODO kontrola ze jmeno jeste neexistuje a nejaky podminky
         btnRegister.setOnClickListener{
-            val intent = Intent(this,MainDashboardActivity::class.java)
+            val intent = Intent(this,LoadActivity::class.java)
             val editor = sharedPreferences.edit()
             editor.putString("textUsername",textUsername.text.toString())
             editor.putBoolean("registeredBool",true) //todo pak zmenit

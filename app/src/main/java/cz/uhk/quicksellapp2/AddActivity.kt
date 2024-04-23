@@ -1,22 +1,38 @@
 package cz.uhk.quicksellapp2
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import java.util.UUID
 
 class AddActivity : AppCompatActivity() {
+
+    private lateinit var imageView: ImageView
+    private val PICK_IMAGE_REQUEST = 1
+
+    private lateinit var storageReference : StorageReference
+    private lateinit var database : FirebaseFirestore
+
+    private lateinit var imageUriRef : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,6 +45,16 @@ class AddActivity : AppCompatActivity() {
 
         val btnUploadDeal= findViewById<ImageButton>(R.id.buttonSaveDeal)
         val btnCancelDeal= findViewById<ImageButton>(R.id.buttonCancelDeal)
+
+        storageReference = Firebase.storage.reference
+        database = Firebase.firestore
+
+        imageView = findViewById(R.id.imageViewUserCustom)
+        val btnSelectImage = findViewById<ImageButton>(R.id.buttonImageUpload)
+
+        btnSelectImage.setOnClickListener {
+            openGallery()
+        }
 
         btnCancelDeal.setOnClickListener{
             val intent = Intent(this,MainDashboardActivity::class.java)
@@ -44,22 +70,24 @@ class AddActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val usernameString= sharedPreferences.getString("textUsername", "chyba")
+        val latitude = sharedPreferences.getString("latitude","0")
+        val longitude = sharedPreferences.getString("longitude","0")
 
 
         btnUploadDeal.setOnClickListener{
             val intent = Intent(this,LoadActivity::class.java)
 
             val deal = hashMapOf(
-                //"username" to textUsername.text.toString(),
                 "dealName" to textDealName.text.toString(),
                 "dealDescription" to textDealDescription.text.toString(),
                 "tag" to textTag.text.toString(),
                 "phoneNumber" to textPhoneNumber.text.toString(),
-                "ownerUser" to usernameString
-
+                "ownerUser" to usernameString,
+                "latitude" to latitude,
+                "longitude" to longitude,
+                "imageUri" to imageUriRef
             )
 
-            // Add a new document with a generated ID
             db.collection("deals")
                 .add(deal)
                 .addOnSuccessListener { documentReference ->
@@ -72,7 +100,35 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            // Get the URI of the selected image
+            val imageUri = data.data
+            // Set the image in the ImageView
+            imageView.setImageURI(imageUri)
+
+
+            val filename = UUID.randomUUID().toString()
+            val ref = storageReference.child("images/$filename")
+            ref.putFile(imageUri!!)
+                .addOnSuccessListener {
+                    // Get the download URL of the uploaded image
+                    ref.downloadUrl.addOnSuccessListener { uri ->
+                        // Store the download URL in Firebase Realtime Database
+                        imageUriRef = uri.toString()
+                        //databaseReference.reference.child("images").push().setValue(uri.toString())
+                    }
+                }
+        }
+    }
 
 
 }
