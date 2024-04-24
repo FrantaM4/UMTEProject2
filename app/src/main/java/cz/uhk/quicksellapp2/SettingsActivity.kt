@@ -28,6 +28,7 @@ class SettingsActivity : AppCompatActivity() {
         userDeleteButton.setOnClickListener{
             val intent = Intent(this,MainActivity::class.java)
             val editor = sharedPreferences.edit()
+            editor.clear()
             editor.putString("textUsername","Nezaregistrovaný uživatel")
             editor.putBoolean("registeredBool",false)
             editor.apply()

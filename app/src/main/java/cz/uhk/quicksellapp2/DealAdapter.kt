@@ -5,14 +5,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 
-class TaskAdapter(private val tasks: List<DealData>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class DealAdapter(private val tasks: List<DealData>) : RecyclerView.Adapter<DealAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
@@ -21,6 +19,14 @@ class TaskAdapter(private val tasks: List<DealData>) : RecyclerView.Adapter<Task
         fun bind(dealData: DealData) {
 
             itemView.findViewById<TextView>(R.id.dealNameView).text = dealData.title
+            if (dealData.foreign){
+                val distanceFormated = String.format("%.2f", dealData.distance)
+                itemView.findViewById<TextView>(R.id.dealDistanceView).text ="${distanceFormated} KM"
+            }else{
+                itemView.findViewById<TextView>(R.id.dealDistanceView).visibility = View.INVISIBLE
+            }
+
+
 
             actionButton.setOnClickListener {
 

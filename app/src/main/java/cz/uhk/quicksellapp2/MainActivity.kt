@@ -147,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
                     editor.putString("latitude",latitude.toString())
                     editor.putString("longitude",longitude.toString())
+
                     editor.apply()
 
                     // Do something with latitude and longitude

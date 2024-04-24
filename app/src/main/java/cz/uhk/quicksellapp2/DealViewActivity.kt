@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.Debug
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
@@ -28,6 +29,10 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class DealViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +51,16 @@ class DealViewActivity : AppCompatActivity() {
         val textPDesc = findViewById<TextView>(R.id.textProductDescriptionView)
         val textPNum = findViewById<TextView>(R.id.textProductNumberView)
 
+        val userImageView = findViewById<ImageView>(R.id.imageViewUserImage)
 
-        var imageDownloadUri = ""
+
+        val storageRef = Firebase.storage.reference/*
+        storageRef.child("/images/2b788db0-9579-4c4b-a46a-198986036aad").getBytes(Long.MAX_VALUE).addOnSuccessListener { result ->
+            val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
+            userImageView.setImageBitmap(bitmap)
+        }.addOnFailureListener {
+            // Handle any errors
+        }*/
 
         var latitude = "37.7749"
         var longitude = "-122.4194"
@@ -72,15 +85,13 @@ class DealViewActivity : AppCompatActivity() {
                     latitude = document.data.get("latitude").toString()
                     longitude = document.data.get("longitude").toString()
 
-                    downloadImage(document.data.get("imageUri").toString())
-                    /*
-                    val storage = Firebase.storage.reference
 
-                    storage.child(document.data.get("imageUri").toString()).downloadUrl.addOnSuccessListener {
-                        Log.d(TAG,"SAJMIHOUKOLEN")
+                    storageRef.child(document.data.get("imageUri").toString()).getBytes(Long.MAX_VALUE).addOnSuccessListener { result ->
+                        val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
+                        userImageView.setImageBitmap(bitmap)
                     }.addOnFailureListener {
-                        Log.d(TAG,"MUZUTOPRCAT")
-                    }*/
+                        // Handle any errors
+                    }
 
 
 
@@ -118,6 +129,8 @@ class DealViewActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
     }
     private fun callPhoneNumber(phoneNumber: String) {
         val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -127,32 +140,4 @@ class DealViewActivity : AppCompatActivity() {
 
     }
 
-    private fun downloadImage(imageUrl: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                // Download image from Firebase Storage URL
-                val bitmap = getBitmapFromUrl(imageUrl)
-                // Display the downloaded image in ImageView
-                val uImageView = findViewById<ImageView>(R.id.imageViewUserImage)
-                uImageView.setImageBitmap(bitmap)
-            } catch (e: Exception) {
-                // Handle error
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private suspend fun getBitmapFromUrl(imageUrl: String): Bitmap? {
-        return try {
-            val url = URL(imageUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val inputStream: InputStream = connection.inputStream
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
-        }
-    }
 }

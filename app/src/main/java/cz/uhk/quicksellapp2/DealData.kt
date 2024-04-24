@@ -1,3 +1,5 @@
 package cz.uhk.quicksellapp2
 
-data class DealData(val title: String)
+import java.io.Serializable
+
+data class DealData(val title: String, val foreign: Boolean, val distance: Double) : Serializable

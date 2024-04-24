@@ -107,6 +107,8 @@ class AddActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        //TODO AT SE TO UKLADA AZ PO SAVE
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
@@ -123,7 +125,7 @@ class AddActivity : AppCompatActivity() {
                     // Get the download URL of the uploaded image
                     ref.downloadUrl.addOnSuccessListener { uri ->
                         // Store the download URL in Firebase Realtime Database
-                        imageUriRef = uri.toString()
+                        imageUriRef = "images/$filename"
                         //databaseReference.reference.child("images").push().setValue(uri.toString())
                     }
                 }

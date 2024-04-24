@@ -20,10 +20,16 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class MainDashboardActivity : AppCompatActivity() {
 
+
+    private lateinit var listMyDeals : List<DealData>
+    private lateinit var listForeignDeals : List<DealData>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,11 +55,25 @@ class MainDashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btnViewAllForeignDeal = findViewById<ImageButton>(R.id.buttonOpenAllForeignDeals)
+        btnViewAllForeignDeal.setOnClickListener{
+            val intent = Intent(this,ViewAllActivity::class.java)
+            intent.putExtra("listDeals",ArrayList( listForeignDeals))
+            startActivity(intent)
+        }
+
+        val btnViewAllMyDeals = findViewById<ImageButton>(R.id.buttonOpenAllMyDeals)
+        btnViewAllMyDeals.setOnClickListener {
+            val intent = Intent(this,ViewAllActivity::class.java)
+            intent.putExtra("listDeals",ArrayList( listMyDeals))
+            startActivity(intent)
+        }
 
 
 
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+
 
 
         val dealCount = sharedPreferences.getInt("dealCount",0)
@@ -63,7 +83,7 @@ class MainDashboardActivity : AppCompatActivity() {
 
         for (i in 0 until dealCount){
             val dealName = sharedPreferences.getString("dealID${i}","idk")
-            myDeals.add(DealData(dealName.toString()))
+            myDeals.add(DealData(dealName.toString(),false,0.0)) //TODO Mozna predeleat
         }
 
 
@@ -73,12 +93,16 @@ class MainDashboardActivity : AppCompatActivity() {
         val recyclerView2 = findViewById<RecyclerView>(R.id.recyclerView3)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = TaskAdapter(myDeals)
+        recyclerView.adapter = DealAdapter(myDeals)
 
         fetchData(sharedPreferences.getString("textUsername","").toString(),recyclerView2)
 
         recyclerView2.layoutManager= LinearLayoutManager(this)
         //recyclerView2.adapter = TaskAdapter(deals)
+
+
+        listMyDeals = myDeals
+
 
 
 
@@ -89,6 +113,8 @@ class MainDashboardActivity : AppCompatActivity() {
         // Use lifecycleScope for coroutine in production
         GlobalScope.launch(Dispatchers.IO) {
             val result = getDataFromDB(username)
+            val sortedList = result.sortedBy{ it.distance } //TODO nejak predelat asi
+
             updateUI(result, recyclerView)
         }
     }
@@ -103,8 +129,14 @@ class MainDashboardActivity : AppCompatActivity() {
                 .addOnSuccessListener { result ->
 
                     for (document in result) {
-                        Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
-                        foreignDealsList.add(DealData(document.data.get("dealName").toString()))
+                        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                        //Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
+                        val latitudeDeal = document.data.get("latitude").toString()
+                        val longitudeDeal = document.data.get("longitude").toString()
+                        val latitudeCurrent = sharedPreferences.getString("latitude","").toString()
+                        val longitudeCurrent = sharedPreferences.getString("longitude","").toString()
+                        val distance = calculateDistance(latitudeDeal.toDouble(),longitudeDeal.toDouble(),latitudeCurrent.toDouble(),longitudeCurrent.toDouble())
+                        foreignDealsList.add(DealData(document.data.get("dealName").toString(),true,distance))
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -121,8 +153,29 @@ class MainDashboardActivity : AppCompatActivity() {
     private suspend fun updateUI(deals : List<DealData>, recyclerView: RecyclerView) {
         withContext(Dispatchers.Main) {
             Log.d(TAG,deals.toString())
-            recyclerView.adapter = TaskAdapter(deals)
+            recyclerView.adapter = DealAdapter(deals)
+            listForeignDeals = deals
         }
     }
+
+
+
+    fun calculateDistance(
+        lat1: Double, lon1: Double, // Latitude and longitude of point 1
+        lat2: Double, lon2: Double  // Latitude and longitude of point 2
+    ): Double {
+        val R = 6371.0 // Radius of the Earth in kilometers
+
+        val latDistance = Math.toRadians(lat2 - lat1)
+        val lonDistance = Math.toRadians(lon2 - lon1)
+        val a = sin(latDistance / 2) * sin(latDistance / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(lonDistance / 2) * sin(lonDistance / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        val distance = R * c
+
+        return distance // Distance in kilometers
+    }
+
 
 }
