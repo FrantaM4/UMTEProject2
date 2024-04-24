@@ -18,9 +18,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="69dp" />
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_gravity="right"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="@string/common_open_on_phone"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/textInputSearch"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:ems="10"
+                android:hint="Zadej hledaný pojem"
+                android:inputType="text" />
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="640dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

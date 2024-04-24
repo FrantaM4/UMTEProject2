@@ -36,14 +36,6 @@
             android:textAlignment="viewStart"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/textProductTagView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
-
 
         <TextView
             android:id="@+id/textProductNumberView"
@@ -101,6 +93,12 @@
                 app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonDeleteDeal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Odstranit nabídku" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

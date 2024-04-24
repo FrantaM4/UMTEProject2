@@ -10,6 +10,8 @@ import android.net.Uri
 import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -68,9 +70,13 @@ class DealViewActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val dealName = sharedPreferences.getString("lastOpenedDealName","bruh")
-        val usernameString= sharedPreferences.getString("textUsername", "Nezaregistrovaný uživatel")
+        val usernameString= sharedPreferences.getString("textUsername", "Nezaregistrovaný uživatel").toString()
         Log.d(TAG,dealName.toString())
         val db = Firebase.firestore
+        var userOwner = ""
+        var documentID = ""
+
+        val buttonDeleteDeal = findViewById<Button>(R.id.buttonDeleteDeal)
 
 
         db.collection("deals")
@@ -79,12 +85,15 @@ class DealViewActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
+                    documentID = document.id
                     textPName.text = document.data.get("dealName").toString()
                     textPDesc.text = document.data.get("dealDescription").toString()
                     textPNum.text = document.data.get("phoneNumber").toString()
                     latitude = document.data.get("latitude").toString()
                     longitude = document.data.get("longitude").toString()
-
+                    userOwner = document.data.get("ownerUser").toString()
+                    if (usernameString != userOwner)
+                        buttonDeleteDeal.visibility = View.INVISIBLE
 
                     storageRef.child(document.data.get("imageUri").toString()).getBytes(Long.MAX_VALUE).addOnSuccessListener { result ->
                         val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
@@ -127,6 +136,25 @@ class DealViewActivity : AppCompatActivity() {
         buttonClose.setOnClickListener{
             val intent = Intent(this,LoadActivity::class.java)
             startActivity(intent)
+        }
+
+
+
+
+        buttonDeleteDeal.setOnClickListener{
+            val intent = Intent(this,LoadActivity::class.java)
+            db.collection("deals").document(documentID).delete()
+                .addOnSuccessListener {
+                    startActivity(intent)
+                    val editor = sharedPreferences.edit()
+                    for (i in 0 until sharedPreferences.getInt("dealCount",0)) {
+                        editor.remove("dealID${i}")
+                    }
+                    editor.remove("dealCount")
+                    editor.apply()
+                }
+                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+
         }
 
 

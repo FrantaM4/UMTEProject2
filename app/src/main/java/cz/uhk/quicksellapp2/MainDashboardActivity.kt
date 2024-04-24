@@ -143,7 +143,7 @@ class MainDashboardActivity : AppCompatActivity() {
                     Log.w(ContentValues.TAG, "Error getting documents.", exception)
 
                 }
-            delay(200)
+            delay(600)
             return foreignDealsList
         } finally {
 

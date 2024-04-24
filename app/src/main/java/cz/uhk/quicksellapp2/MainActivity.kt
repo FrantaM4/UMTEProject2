@@ -46,8 +46,6 @@ class MainActivity : AppCompatActivity() {
         val btnSettings = findViewById<Button>(R.id.buttonSettings)
         val db = Firebase.firestore
 
-        /*//TODO IDK NEJAK TO SPRAVIT
-        var syncCheck = false;
 
         //firebase db
         if (registeredBool){
@@ -60,6 +58,17 @@ class MainActivity : AppCompatActivity() {
                     for (document in result) {
                         Log.d(TAG, "${document.id} => ${document.data}")
                         usersFound+=1
+
+                    }
+                    if (usersFound == 1)
+                        textUsername.text = usernameString
+                    else{
+                        textUsername.text = "Nezaregistrovaný uživatel"
+                        val editor = sharedPreferences.edit()
+
+                        editor.putString("textUsername","Nezaregistrovaný uživatel")
+                        editor.putBoolean("registeredBool",false)
+                        editor.apply()
                     }
 
                 }
@@ -68,21 +77,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
-            Log.i(TAG,usersFound.toString())
-            if (usersFound == 1)
-                syncCheck = true
         }
 
-        if (syncCheck){
-            textUsername.text = usernameString
-        }else{
-            textUsername.text = "Nezaregistrovaný uživatel"
-            val editor = sharedPreferences.edit()
-            editor.putString("textUsername","Nezaregistrovaný uživatel")
-            editor.putBoolean("registeredBool",false)
-            editor.apply()
-        }
-        */
+        //
+
+
         if (checkLocationPermissions()) {
             getLastLocation()
         } else {

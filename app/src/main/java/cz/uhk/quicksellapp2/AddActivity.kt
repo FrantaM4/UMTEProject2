@@ -65,7 +65,6 @@ class AddActivity : AppCompatActivity() {
 
         val textDealName = findViewById<EditText>(R.id.textProductName)
         val textDealDescription = findViewById<EditText>(R.id.textDescription)
-        val textTag = findViewById<EditText>(R.id.textTags)
         val textPhoneNumber = findViewById<EditText>(R.id.textPhoneNumber)
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -80,7 +79,6 @@ class AddActivity : AppCompatActivity() {
             val deal = hashMapOf(
                 "dealName" to textDealName.text.toString(),
                 "dealDescription" to textDealDescription.text.toString(),
-                "tag" to textTag.text.toString(),
                 "phoneNumber" to textPhoneNumber.text.toString(),
                 "ownerUser" to usernameString,
                 "latitude" to latitude,
