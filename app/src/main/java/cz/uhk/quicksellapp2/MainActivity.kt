@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         //lokalni db -> porovnani lokalnich dat s cloudem
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val registeredBool = sharedPreferences.getBoolean("registeredBool", false)
+        var registeredBool = sharedPreferences.getBoolean("registeredBool", false)
         val usernameString= sharedPreferences.getString("textUsername", "Nezaregistrovaný uživatel")
         val textUsername = findViewById<TextView>(R.id.UsernameView)
         val btnLaunch = findViewById<Button>(R.id.buttonLaunch)
@@ -65,9 +65,9 @@ class MainActivity : AppCompatActivity() {
                     else{
                         textUsername.text = "Nezaregistrovaný uživatel"
                         val editor = sharedPreferences.edit()
-
                         editor.putString("textUsername","Nezaregistrovaný uživatel")
                         editor.putBoolean("registeredBool",false)
+                        registeredBool = false
                         editor.apply()
                     }
 

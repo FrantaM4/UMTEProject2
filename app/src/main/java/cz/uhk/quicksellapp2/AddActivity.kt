@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -71,30 +72,50 @@ class AddActivity : AppCompatActivity() {
         val usernameString= sharedPreferences.getString("textUsername", "chyba")
         val latitude = sharedPreferences.getString("latitude","0")
         val longitude = sharedPreferences.getString("longitude","0")
+        imageUriRef = ""
 
 
         btnUploadDeal.setOnClickListener{
             val intent = Intent(this,LoadActivity::class.java)
+            if (textDealName.text.isNotEmpty() && textDealDescription.text.isNotEmpty() && textPhoneNumber.text.isNotEmpty() && imageUriRef.isNotEmpty()){
+                db.collection("deals")
+                    .whereEqualTo("dealName",textDealName.text.toString())
+                    .get()
+                    .addOnSuccessListener {result ->
+                        if (!result.isEmpty)
+                            Toast.makeText(this, "Název nabídky je již používán, zvolte jiný", Toast.LENGTH_LONG).show()
+                        else{
+                            val deal = hashMapOf(
+                                "dealName" to textDealName.text.toString(),
+                                "dealDescription" to textDealDescription.text.toString(),
+                                "phoneNumber" to textPhoneNumber.text.toString(),
+                                "ownerUser" to usernameString,
+                                "latitude" to latitude,
+                                "longitude" to longitude,
+                                "imageUri" to imageUriRef
+                            )
 
-            val deal = hashMapOf(
-                "dealName" to textDealName.text.toString(),
-                "dealDescription" to textDealDescription.text.toString(),
-                "phoneNumber" to textPhoneNumber.text.toString(),
-                "ownerUser" to usernameString,
-                "latitude" to latitude,
-                "longitude" to longitude,
-                "imageUri" to imageUriRef
-            )
+                            db.collection("deals")
+                                .add(deal)
+                                .addOnSuccessListener { documentReference ->
+                                    Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w(ContentValues.TAG, "Error adding document", e)
+                                }
+                            startActivity(intent)
+                        }
+                    }
+                    .addOnFailureListener {
 
-            db.collection("deals")
-                .add(deal)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(ContentValues.TAG, "Error adding document", e)
-                }
-            startActivity(intent)
+                    }
+
+
+            }
+            else{
+                Toast.makeText(this, "Vyplňte veškerá pole", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
@@ -106,7 +127,6 @@ class AddActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        //TODO AT SE TO UKLADA AZ PO SAVE
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {

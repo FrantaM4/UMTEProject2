@@ -56,13 +56,7 @@ class DealViewActivity : AppCompatActivity() {
         val userImageView = findViewById<ImageView>(R.id.imageViewUserImage)
 
 
-        val storageRef = Firebase.storage.reference/*
-        storageRef.child("/images/2b788db0-9579-4c4b-a46a-198986036aad").getBytes(Long.MAX_VALUE).addOnSuccessListener { result ->
-            val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
-            userImageView.setImageBitmap(bitmap)
-        }.addOnFailureListener {
-            // Handle any errors
-        }*/
+        val storageRef = Firebase.storage.reference
 
         var latitude = "37.7749"
         var longitude = "-122.4194"
@@ -88,7 +82,7 @@ class DealViewActivity : AppCompatActivity() {
                     documentID = document.id
                     textPName.text = document.data.get("dealName").toString()
                     textPDesc.text = document.data.get("dealDescription").toString()
-                    textPNum.text = document.data.get("phoneNumber").toString()
+                    textPNum.text = "+420 ${document.data.get("phoneNumber").toString()}"
                     latitude = document.data.get("latitude").toString()
                     longitude = document.data.get("longitude").toString()
                     userOwner = document.data.get("ownerUser").toString()
@@ -122,13 +116,10 @@ class DealViewActivity : AppCompatActivity() {
         buttonMap.setOnClickListener{
             val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude(Label)")
 
-            // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
 
-            // Make the Intent explicit by setting the Google Maps package
             mapIntent.setPackage("com.google.android.apps.maps")
 
-            // Attempt to start an activity that can handle the Intent
             startActivity(mapIntent)
         }
 

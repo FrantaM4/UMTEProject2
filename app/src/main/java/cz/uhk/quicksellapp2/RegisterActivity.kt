@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,7 +32,6 @@ class RegisterActivity : AppCompatActivity() {
 
         val db = Firebase.firestore
 
-        //TODO kontrola ze jmeno jeste neexistuje a nejaky podminky
         btnRegister.setOnClickListener{
             val intent = Intent(this,LoadActivity::class.java)
             val editor = sharedPreferences.edit()
@@ -39,20 +39,34 @@ class RegisterActivity : AppCompatActivity() {
             editor.putBoolean("registeredBool",true) //todo pak zmenit
             editor.apply()
 
+
+
             // creater a new user
             val user = hashMapOf(
                 "username" to textUsername.text.toString(),
                 )
-
             db.collection("users")
-                .add(user)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                .whereEqualTo("username",textUsername.text.toString())
+                .get()
+                .addOnSuccessListener {result ->
+                    if (!result.isEmpty)
+                        Toast.makeText(this, "Jméno je již používané", Toast.LENGTH_SHORT).show()
+                    else{
+                        db.collection("users")
+                            .add(user)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error adding document", e)
+                            }
+                        startActivity(intent)
+                    }
                 }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
+                .addOnFailureListener {
+
                 }
-            startActivity(intent)
+
         }
     }
 }
