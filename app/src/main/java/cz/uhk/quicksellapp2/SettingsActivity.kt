@@ -27,11 +27,11 @@ class SettingsActivity : AppCompatActivity() {
         val db = Firebase.firestore
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val intent = Intent(this,MainActivity::class.java)
-        userDeleteButton.setOnClickListener{
 
+        userDeleteButton.setOnClickListener{
+            val intent = Intent(this,MainActivity::class.java)
             val editor = sharedPreferences.edit()
-            //TODO DELETE V DB VCETNE DEALU ve final verzi
+            //TODO DELETE V DB ???
             editor.clear()
             editor.putString("textUsername","Nezaregistrovaný uživatel")
             editor.putBoolean("registeredBool",false)
@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
         val darkmodeBtn = findViewById<Button>(R.id.buttonDarkmode)
         darkmodeBtn.setOnClickListener {
             toggleDarkMode()
-            startActivity(intent)
+
         }
 
     }

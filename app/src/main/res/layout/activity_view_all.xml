@@ -8,9 +8,10 @@
     tools:context=".ViewAllActivity">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="889dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -20,16 +21,15 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="69dp" />
+            android:layout_height="37dp" />
 
         <ImageButton
             android:id="@+id/closeButton"
             android:layout_width="68dp"
             android:layout_height="68dp"
             android:layout_gravity="right"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
             android:contentDescription="@string/common_open_on_phone"
-            />
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         <LinearLayout
             android:layout_width="match_parent"
