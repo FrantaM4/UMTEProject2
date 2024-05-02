@@ -113,9 +113,10 @@ class MainDashboardActivity : AppCompatActivity() {
         // Use lifecycleScope for coroutine in production
         GlobalScope.launch(Dispatchers.IO) {
             val result = getDataFromDB(username)
-            val sortedList = result.sortedBy{ it.distance } //TODO nejak predelat asi
+            val sortedList = result.sortedBy{ it.distance }
 
-            updateUI(result, recyclerView)
+
+            updateUI(sortedList, recyclerView)
         }
     }
 
